@@ -284,14 +284,48 @@ m1.innerText=inst.toFixed(2); m2.innerText=inst.toFixed(2); m3.innerText=inst.to
 }
 function dates(){let d=new Date(); for(let i=1;i<=3;i++){let x=new Date(d); x.setMonth(x.getMonth()+i); document.getElementById('d'+i).innerText=x.toLocaleDateString();}}
 function newInvoice(){
-    document.getElementById('itemBody').innerHTML = '';
 
-    addItem();
-
+    // New invoice number
     document.getElementById('invoiceNo').value =
         'INV-' + Math.floor(Math.random() * 9000 + 1000);
 
+    // Today's date
+    document.getElementById('invoiceDate').value =
+        new Date().toISOString().split('T')[0];
+
+    // Clear all text, number, date and textarea fields
+    document.querySelectorAll('input').forEach(input => {
+
+        if(input.id === 'invoiceNo' || input.id === 'invoiceDate')
+            return;
+
+        if(input.type === 'number'){
+            input.value = 0;
+        }
+        else if(input.type === 'file'){
+            input.value = '';
+        }
+});
+
+    // Reset dropdowns
+    document.getElementById('currency').value = '¥';
+    document.getElementById('paymentType').value = 'full';
+    document.getElementById('downType').value = '10';
+
+    // Hide layaway section
+    document.getElementById('laySection').style.display = 'none';
+    document.getElementById('fullSection').style.display = 'block';
+
+    // Remove all items
+    document.getElementById('itemBody').innerHTML = '';
+
+    // Add fresh row
+    addItem();
+
+    // Recalculate
     updateTotals();
+
+    // Generate installment dates
     dates();
 }
 </script>
