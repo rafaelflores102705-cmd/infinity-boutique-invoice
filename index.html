@@ -6,7 +6,6 @@
 <title>Infinity Boutique Invoice</title>
 
 <style>
-<style>
 
 *{
     margin:0;
@@ -131,761 +130,1085 @@ h3{
 
 #fullPaymentSection,
 #layawaySection{
-    background:#fafafa;
-    padding:20px;
-    border:1px solid #ddd;
-    border-radius:5px;
-    margin-top:20px;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
-.no-print{
-    text-align:right;
-    margin-bottom:15px;
+body{
+background:#f4f4f4;
+padding:20px;
 }
 
-.installment-status{
-    min-width:140px;
+.invoice{
+max-width:1200px;
+margin:auto;
+background:#fff;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,.1);
 }
 
-.summary-box{
-    border:1px solid #ddd;
-    background:#f9f9f9;
-    padding:15px;
-    margin-top:15px;
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:20px;
+flex-wrap:wrap;
 }
 
-.summary-box h3{
-    margin:5px 0;
+.logo{
+width:120px;
+height:120px;
+object-fit:contain;
+border:1px solid #ddd;
 }
 
-@media screen and (max-width:768px){
+.company-info h1{
+color:#2e7d32;
+}
 
-    .header{
-        flex-direction:column;
-    }
+.customer-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+margin-top:20px;
+}
 
-    .customer-grid{
-        grid-template-columns:1fr;
-    }
+input,
+select,
+textarea{
+width:100%;
+padding:8px;
+border:1px solid #ccc;
+border-radius:5px;
+}
 
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#2e7d32;
+color:white;
+padding:10px;
+}
+
+td{
+border:1px solid #ddd;
+padding:8px;
+text-align:center;
+}
+
+.item-preview{
+width:70px;
+height:70px;
+object-fit:cover;
+border:1px solid #ccc;
+display:block;
+margin:auto;
+}
+
+.btn{
+background:#2e7d32;
+color:white;
+border:none;
+padding:10px 15px;
+cursor:pointer;
+border-radius:5px;
+margin:5px;
+}
+
+.btn:hover{
+background:#256428;
+}
+
+.section{
+margin-top:25px;
+padding:15px;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+.summary{
+font-size:18px;
+font-weight:bold;
+margin-top:10px;
+}
+
+.status-input{
+min-width:120px;
 }
 
 @media print{
 
-    body{
-        background:white;
-        padding:0;
-    }
-
-    .invoice-container{
-        box-shadow:none;
-        border:none;
-        width:100%;
-        max-width:100%;
-    }
-
-    .no-print,
-    button{
-        display:none !important;
-    }
-
-    input,
-    textarea,
-    select{
-        border:none;
-        background:transparent;
-        padding:0;
-        outline:none;
-    }
-
-    h1{
-        color:black;
-    }
-
-    table th{
-        color:black;
-        background:#eaeaea;
-    }
-
+.no-print{
+display:none !important;
 }
 
-</style>
+body{
+background:white;
+padding:0;
+}
+
+.invoice{
+box-shadow:none;
+max-width:100%;
+}
+
+input,
+select,
+textarea{
+border:none;
+background:none;
+}
+
+}
 </style>
 
 </head>
 <body>
 
+
 <div class="no-print">
-    <button onclick="printInvoice()">
+
+<button class="btn" onclick="printInvoice()">
 🖨 Print Invoice
 </button>
 
-<button onclick="newInvoice()">
+<button class="btn" onclick="newInvoice()">
 ➕ New Invoice
 </button>
+
 </div>
 
-<div class="invoice-container">
+<div class="invoice">
 
-    <div class="header-left">
-            <img src="https://drive.google.com/thumbnail?id=1zF5e4k75SMfcJ6Jtl0_ik4lqOJPzUZKH&sz=w1000"
-     alt="Infinity Boutique Logo"
-     class="logo">
-        <div>
-            <h1>Infinity Boutique's JP Online Shop</h1>
-            <p>Nagoya, Aichi, Japan</p>
-            <p>08094932346</p>
-            <p>harukana1369@gmail.com</p>
-        </div>
+<div class="header">
 
-        <div>
-            <label>Invoice No.</label>
-            <input type="text" value="INV-0001">
+<div>
 
-            <br><br>
+<img id="companyLogo"
+class="logo"
+src=""
+alt="Logo">
 
-            <label>Date</label>
-            <input type="date">
-        </div>
-    </div>
+<input type="file"
+accept="image/*"
+onchange="loadCompanyLogo(event)">
 
-    <hr>
+</div>
 
-    <h2>Customer Information</h2>
+<div class="company-info">
 
-    <div class="customer-grid">
+<h1>Infinity Boutique's JP Online Shop</h1>
 
-        <div>
-            <label>Customer Name</label>
-            <input type="text">
-        </div>
+<p>Nagoya, Aichi, Japan</p>
 
-        <div>
-            <label>Contact Number</label>
-            <input type="text">
-        </div>
+<p>08094932346</p>
 
-        <div>
-            <label>Address</label>
-            <input type="text">
-        </div>
+<p>harukana1369@gmail.com</p>
 
-        <div>
-            <label>Overall Payment Status</label>
-            <input type="text"
-                   placeholder="Paid / Pending / Layaway Active">
-        </div>
+</div>
 
-    </div>
+<div>
 
-    <hr>
-    <h2>Currency</h2>
+<label>Invoice No.</label>
 
-<select id="currency" onchange="updateCurrency()">
-    <option value="¥">Japanese Yen (¥)</option>
-    <option value="₱">Philippine Peso (₱)</option>
-</select>
+<input id="invoiceNo"
+value="INV-1001">
+
+<br><br>
+
+<label>Date</label>
+
+<input type="date">
+
+</div>
+
+</div>
 
 <hr>
-    <h2>Payment Type</h2>
 
-    <select id="paymentType"
-            onchange="togglePaymentType()">
+<h2>Customer Information</h2>
 
-        <option value="full">
-            Full Payment
-        </option>
+<div class="customer-grid">
 
-        <option value="layaway">
-            3-Month Layaway
-        </option>
+<div>
+<label>Customer Name</label>
+<input>
+</div>
 
-    </select>
+<div>
+<label>Contact Number</label>
+<input>
+</div>
 
-    <hr>
+<div>
+<label>Address</label>
+<input>
+</div>
 
-    <h2>Items</h2>
+<div>
+<label>Overall Status</label>
+<input placeholder="Paid / Pending">
+</div>
 
-    <table id="itemsTable">
+</div>
 
-        <thead>
+<div class="section">
 
-        <tr>
-            <th>Description</th>
-            <th>Rate (¥)</th>
-            <th>Quantity</th>
-            <th>Amount (¥)</th>
-            <th>Action</th>
-        </tr>
+<h2>Currency</h2>
 
-        </thead>
+<select id="currency"
+onchange="updateTotals()">
 
-        <tbody id="itemBody">
+<option value="¥">Japanese Yen (¥)</option>
 
-        <tr class="item-row">
+<option value="₱">Philippine Peso (₱)</option>
 
-            <td>
-                <input type="text">
-            </td>
+</select>
 
-            <td>
-                <input type="number"
-                       class="rate"
-                       oninput="updateTotals()">
-            </td>
+</div>
 
-            <td>
-                <input type="number"
-                       class="qty"
-                       value="1"
-                       oninput="updateTotals()">
-            </td>
+<div class="section">
 
-            <td>
-                ¥<span class="amount">0</span>
-            </td>
+<h2>Payment Type</h2>
 
-            <td>
-                <button type="button"
-                        onclick="removeRow(this)">
-                    Remove
-                </button>
-            </td>
+<select id="paymentType"
+onchange="togglePaymentType()">
 
-        </tr>
+<option value="full">
+Full Payment
+</option>
 
-        </tbody>
+<option value="layaway">
+Layaway
+</option>
 
-    </table>
+</select>
 
-    <br>
+</div>
 
-    <button type="button"
-            onclick="addItemRow()">
-        + Add Item
-    </button>
+<div class="section">
 
-    <hr>
+<h2>Items</h2>
 
-    <h2>
-        Total Purchase:
-        <span id="currencySymbol">¥</span>
-    </h2>
+<table id="itemsTable">
 
-    <!-- FULL PAYMENT -->
+<thead>
 
-    <div id="fullPaymentSection">
+<tr>
 
-        <h2>Full Payment</h2>
+<th>Photo</th>
+<th>Description</th>
+<th>Rate</th>
+<th>Qty</th>
+<th>Amount</th>
+<th>Action</th>
 
-        <label>Payment Received</label>
+</tr>
 
-        <input type="number"
-               id="fullPaymentReceived"
-               value="0"
-               oninput="updateTotals()">
+</thead>
 
-        <h3>
-            Balance Due:
-            <span id="currencySymbol">¥</span>
-        </h3>
+<tbody id="itemBody">
 
-    </div>
+<tr class="item-row">
 
-    <!-- LAYAWAY -->
+<td>
 
-    <div id="layawaySection"
-         style="display:none;">
+<img class="item-preview">
 
-        <h2>Layaway Agreement</h2>
+<input type="file"
+accept="image/*"
+onchange="previewItemImage(event,this)">
 
-<label>Down Payment Option</label>
+</td>
+
+<td>
+<input type="text">
+</td>
+
+<td>
+<input class="rate"
+type="number"
+oninput="updateTotals()">
+</td>
+
+<td>
+<input class="qty"
+value="1"
+type="number"
+oninput="updateTotals()">
+</td>
+
+<td>
+
+<span class="amount">
+0.00
+</span>
+
+</td>
+
+<td>
+
+<button class="btn"
+onclick="removeRow(this)">
+Remove
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<button class="btn"
+onclick="addItemRow()">
+
++ Add Item
+
+</button>
+
+</div>
+
+<div class="section">
+
+<h2>
+
+Total Purchase:
+<span id="currencySymbol">¥</span>
+
+<span id="total">
+0.00
+</span>
+
+</h2>
+
+</div>
+
+<div id="fullPaymentSection"
+class="section">
+
+<h2>Full Payment</h2>
+
+<label>
+Payment Received
+</label>
+
+<input id="fullPaymentReceived"
+type="number"
+value="0"
+oninput="updateTotals()">
+
+<h3>
+
+Balance Due:
+<span id="currencySymbol2">¥</span>
+
+<span id="fullBalanceDue">
+0.00
+</span>
+
+</h3>
+
+</div>
+
+<div id="layawaySection"
+class="section"
+style="display:none;">
+
+<h2>Layaway Agreement</h2>
+
+<label>
+Down Payment Option
+</label>
 
 <select id="downPaymentType"
-        onchange="updateTotals()">
+onchange="updateTotals()">
 
-    <option value="10">10%</option>
-    <option value="20">20%</option>
-    <option value="30" selected>30%</option>
-    <option value="40">40%</option>
-    <option value="50">50%</option>
-    <option value="custom">Custom Amount</option>
+<option value="10">10%</option>
+<option value="20">20%</option>
+<option value="30">30%</option>
+<option value="40">40%</option>
+<option value="50">50%</option>
+<option value="custom">Custom Amount</option>
 
 </select>
 
 <br><br>
 
-<label>Custom Down Payment</label>
+<label>
+Custom Down Payment
+</label>
 
-<input type="number"
-       id="customDownPayment"
-       value="0"
-       oninput="updateTotals()">
+<input id="customDownPayment"
+type="number"
+value="0"
+oninput="updateTotals()">
 
 <h3>
-    Required Down Payment:
-    <span id="currencySymbol">¥</span>
-    <span id="downPayment">0.00</span>
+
+Required Down Payment:
+<span id="currencySymbol3">¥</span>
+
+<span id="downPayment">
+0.00
+</span>
+
 </h3>
 
-        <label>
-            Down Payment Received
-        </label>
+<label>
 
-        <input type="number"
-               id="layawayPaymentReceived"
-               value="0"
-               oninput="updateTotals()">
+Down Payment Received
 
-        <h3>
-            Down Payment Balance Due:
-            <span id="currencySymbol">¥</span>
-        </h3>
+</label>
 
-        <h3>
-            Remaining Balance:
-            <span id="currencySymbol">¥</span>
-        </h3>
+<input id="layawayPaymentReceived"
+type="number"
+value="0"
+oninput="updateTotals()">
 
-        <h2>Installment Schedule</h2>
+<h3>
 
-        <table>
+Remaining Balance:
+<span id="currencySymbol4">¥</span>
 
-            <tr>
-                <th>Payment #</th>
-                <th>Due Date</th>
-                <th>Amount Due</th>
-                <th>Status</th>
-            </tr>
+<span id="remainingBalance">
+0.00
+</span>
 
-            <tr>
-                <td>1</td>
-                <td id="due1"></td>
-                <td>¥<span id="month1">0.00</span></td>
-                <td>
-                    <input type="text"
-                           placeholder="Pending / Paid">
-                </td>
-            </tr>
+</h3>
 
-            <tr>
-                <td>2</td>
-                <td id="due2"></td>
-                <td>¥<span id="month2">0.00</span></td>
-                <td>
-                    <input type="text"
-                           placeholder="Pending / Paid">
-                </td>
-            </tr>
+<h2>
+Installments
+</h2>
 
-            <tr>
-                <td>3</td>
-                <td id="due3"></td>
-                <td>¥<span id="month3">0.00</span></td>
-                <td>
-                    <input type="text"
-                           placeholder="Pending / Paid">
-                </td>
-            </tr>
+<table>
 
-        </table>
+<tr>
 
-    </div>
+<th>#</th>
+<th>Amount</th>
+<th>Status</th>
 
-    <hr>
+</tr>
 
-    <h2>Terms & Conditions</h2>
+<tr>
 
-    <textarea rows="5">
-Down payment required for layaway purchases.
-Remaining balance must be paid according to schedule.
-Failure to pay may result in cancellation of the layaway agreement.
-All sales are final.
-    </textarea>
+<td>1</td>
+
+<td>
+
+<span id="currencySymbol5">
+¥
+</span>
+
+<span id="month1">
+0.00
+</span>
+
+</td>
+
+<td>
+
+<input class="status-input"
+placeholder="Pending / Paid">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>
+
+<span id="currencySymbol6">
+¥
+</span>
+
+<span id="month2">
+0.00
+</span>
+
+</td>
+
+<td>
+
+<input class="status-input"
+placeholder="Pending / Paid">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>
+
+<span id="currencySymbol7">
+¥
+</span>
+
+<span id="month3">
+0.00
+</span>
+
+</td>
+
+<td>
+
+<input class="status-input"
+placeholder="Pending / Paid">
+
+</td>
+
+</tr>
+
+</table>
 
 </div>
 
+</div>
 <script>
-
 function printInvoice(){
-    window.print();
+window.print();
 }
-let currentCurrency = "¥";
 
-function updateCurrency(){
-
-    currentCurrency =
-        document.getElementById(
-            "currency"
-        ).value;
-
-    document.getElementById(
-        "currencySymbol"
-    ).innerText =
-        currentCurrency;
-
-    updateTotals();
-    }
 function togglePaymentType(){
 
-    const paymentType =
-        document.getElementById("paymentType").value;
+const type =
+document.getElementById(
+"paymentType"
+).value;
 
-    const fullSection =
-        document.getElementById("fullPaymentSection");
+document.getElementById(
+"fullPaymentSection"
+).style.display =
+type === "full"
+? "block"
+: "none";
 
-    const layawaySection =
-        document.getElementById("layawaySection");
+document.getElementById(
+"layawaySection"
+).style.display =
+type === "layaway"
+? "block"
+: "none";
 
-    if(paymentType === "full"){
+updateTotals();
+}
 
-        fullSection.style.display = "block";
-        layawaySection.style.display = "none";
+function loadCompanyLogo(event){
 
-    }
-    else{
+const file =
+event.target.files[0];
 
-        fullSection.style.display = "none";
-        layawaySection.style.display = "block";
+if(!file) return;
 
-    }
+const reader =
+new FileReader();
 
-    updateTotals();
+reader.onload =
+function(e){
+
+document.getElementById(
+"companyLogo"
+).src =
+e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+function previewItemImage(
+event,
+input
+){
+
+const file =
+event.target.files[0];
+
+if(!file) return;
+
+const reader =
+new FileReader();
+
+reader.onload =
+function(e){
+
+input.parentElement
+.querySelector(
+".item-preview"
+)
+.src =
+e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
 }
 
 function addItemRow(){
 
-    const tbody =
-        document.getElementById("itemBody");
+const tbody =
+document.getElementById(
+"itemBody"
+);
 
-    const row =
-        document.createElement("tr");
+const row =
+document.createElement(
+"tr"
+);
 
-    row.className = "item-row";
+row.className =
+"item-row";
 
-    row.innerHTML = `
-        <td>
-            <input type="text">
-        </td>
+row.innerHTML = `
 
-        <td>
-            <input type="number"
-                   class="rate"
-                   oninput="updateTotals()">
-        </td>
+<td>
 
-        <td>
-            <input type="number"
-                   class="qty"
-                   value="1"
-                   oninput="updateTotals()">
-        </td>
+<img class="item-preview">
 
-        <td>
-            ¥<span class="amount">0</span>
-        </td>
+<input type="file"
+accept="image/*"
+onchange="
+previewItemImage(
+event,
+this
+)">
 
-        <td>
-            <button type="button"
-                    onclick="removeRow(this)">
-                Remove
-            </button>
-        </td>
-    `;
+</td>
 
-    tbody.appendChild(row);
+<td>
+
+<input type="text">
+
+</td>
+
+<td>
+
+<input class="rate"
+type="number"
+oninput="
+updateTotals()
+">
+
+</td>
+
+<td>
+
+<input class="qty"
+type="number"
+value="1"
+oninput="
+updateTotals()
+">
+
+</td>
+
+<td>
+
+<span class="amount">
+0.00
+</span>
+
+</td>
+
+<td>
+
+<button class="btn"
+onclick="
+removeRow(this)
+">
+
+Remove
+
+</button>
+
+</td>
+
+`;
+
+tbody.appendChild(
+row
+);
+
 }
 
-function removeRow(button){
+function removeRow(btn){
 
-    const rows =
-        document.querySelectorAll(".item-row");
+const rows =
+document.querySelectorAll(
+".item-row"
+);
 
-    if(rows.length <= 1){
+if(rows.length <= 1){
 
-        alert(
-            "At least one item row must remain."
-        );
+alert(
+"At least one item is required."
+);
 
-        return;
-    }
+return;
 
-    button.closest("tr").remove();
+}
 
-    updateTotals();
+btn.closest("tr")
+.remove();
+
+updateTotals();
+
 }
 
 function updateTotals(){
 
-    let total = 0;
+let total = 0;
 
-    document
-        .querySelectorAll(".item-row")
-        .forEach(row => {
+document
+.querySelectorAll(
+".item-row"
+)
+.forEach(row=>{
 
-            const rate =
-                parseFloat(
-                    row.querySelector(".rate").value
-                ) || 0;
+const rate =
+parseFloat(
+row.querySelector(
+".rate"
+).value
+) || 0;
 
-            const qty =
-                parseFloat(
-                    row.querySelector(".qty").value
-                ) || 0;
+const qty =
+parseFloat(
+row.querySelector(
+".qty"
+).value
+) || 0;
 
-            const amount =
-                rate * qty;
+const amount =
+rate * qty;
 
-            row.querySelector(".amount").innerText =
-                amount.toLocaleString(
-                    undefined,
-                    {
-                        minimumFractionDigits:2,
-                        maximumFractionDigits:2
-                    }
-                );
+row.querySelector(
+".amount"
+).innerText =
+amount.toLocaleString(
+undefined,
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
 
-            total += amount;
+total += amount;
 
-        });
+});
 
-    document.getElementById("total").innerText =
-        total.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
+document.getElementById(
+"total"
+).innerText =
+total.toLocaleString(
+undefined,
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
 
-    // =====================
-    // FULL PAYMENT
-    // =====================
+const currency =
+document.getElementById(
+"currency"
+).value;
 
-    const fullPaymentReceived =
-        parseFloat(
-            document.getElementById(
-                "fullPaymentReceived"
-            ).value
-        ) || 0;
+[
+"currencySymbol",
+"currencySymbol2",
+"currencySymbol3",
+"currencySymbol4",
+"currencySymbol5",
+"currencySymbol6",
+"currencySymbol7"
+].forEach(id=>{
 
-    let fullBalanceDue =
-        total - fullPaymentReceived;
+const el =
+document.getElementById(
+id
+);
 
-    if(fullBalanceDue < 0){
+if(el){
 
-        fullBalanceDue = 0;
-
-    }
-
-    document.getElementById(
-        "fullBalanceDue"
-    ).innerText =
-        fullBalanceDue.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
-
-    // =====================
-    // LAYAWAY
-    // =====================
-
-    let downPayment = 0;
-
-const selectedDownPayment =
-    document.getElementById(
-        "downPaymentType"
-    ).value;
-
-if(selectedDownPayment === "custom"){
-
-    downPayment =
-        parseFloat(
-            document.getElementById(
-                "customDownPayment"
-            ).value
-        ) || 0;
+el.innerText =
+currency;
 
 }
-else{
 
-    downPayment =
-        total *
-        (parseFloat(
-            selectedDownPayment
-        ) / 100);
+});
+
+const paymentReceived =
+parseFloat(
+document.getElementById(
+"fullPaymentReceived"
+).value
+) || 0;
+
+let balanceDue =
+total -
+paymentReceived;
+
+if(balanceDue < 0)
+balanceDue = 0;
+
+document.getElementById(
+"fullBalanceDue"
+).innerText =
+balanceDue.toLocaleString(
+undefined,
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
+
+let downPayment = 0;
+
+const option =
+document.getElementById(
+"downPaymentType"
+).value;
+
+if(option === "custom"){
+
+downPayment =
+parseFloat(
+document.getElementById(
+"customDownPayment"
+).value
+) || 0;
+
+}else{
+
+downPayment =
+total *
+(
+parseFloat(
+option
+) / 100
+);
 
 }
 
 if(downPayment > total){
 
-    downPayment = total;
+downPayment =
+total;
 
 }
 
-const remainingBalance =
-    total - downPayment;
+document.getElementById(
+"downPayment"
+).innerText =
+downPayment.toLocaleString(
+undefined,
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
 
-    document.getElementById("month1").innerText =
-        installmentAmount.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
+const remaining =
+total -
+downPayment;
 
-    document.getElementById("month2").innerText =
-        installmentAmount.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
+document.getElementById(
+"remainingBalance"
+).innerText =
+remaining.toLocaleString(
+undefined,
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
 
-    document.getElementById("month3").innerText =
-        installmentAmount.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
+const installment =
+remaining / 3;
 
-    generateDueDates();
+document.getElementById(
+"month1"
+).innerText =
+installment.toLocaleString(
+undefined,
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
+
+document.getElementById(
+"month2"
+).innerText =
+installment.toLocaleString(
+undefined,
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
+
+document.getElementById(
+"month3"
+).innerText =
+installment.toLocaleString(
+undefined,
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
+
 }
 
-function generateDueDates(){
-
-    const today =
-        new Date();
-
-    const date1 =
-        new Date(today);
-
-    const date2 =
-        new Date(today);
-
-    const date3 =
-        new Date(today);
-
-    date1.setMonth(
-        date1.getMonth() + 1
-    );
-
-    date2.setMonth(
-        date2.getMonth() + 2
-    );
-
-    date3.setMonth(
-        date3.getMonth() + 3
-    );
-
-    document.getElementById(
-        "due1"
-    ).innerText =
-        date1.toLocaleDateString();
-
-    document.getElementById(
-        "due2"
-    ).innerText =
-        date2.toLocaleDateString();
-
-    document.getElementById(
-        "due3"
-    ).innerText =
-        date3.toLocaleDateString();
-}
 function newInvoice(){
 
-    if(!confirm(
-        "Create a new invoice?"
-    )){
-        return;
-    }
-
-    document
-        .querySelectorAll("input")
-        .forEach(input => {
-
-            if(
-                input.type !== "button"
-            ){
-                input.value = "";
-            }
-
-        });
-
-    document
-        .querySelectorAll(".amount")
-        .forEach(amount => {
-
-            amount.innerText = "0.00";
-
-        });
-
-    document.getElementById(
-        "itemBody"
-    ).innerHTML = `
-        <tr class="item-row">
-
-            <td>
-                <input type="text">
-            </td>
-
-            <td>
-                <input type="number"
-                       class="rate"
-                       oninput="updateTotals()">
-            </td>
-
-            <td>
-                <input type="number"
-                       class="qty"
-                       value="1"
-                       oninput="updateTotals()">
-            </td>
-
-            <td>
-                <span class="amount">
-                    0.00
-                </span>
-            </td>
-
-            <td>
-                <button type="button"
-                        onclick="removeRow(this)">
-                    Remove
-                </button>
-            </td>
-
-        </tr>
-    `;
-
-    const invoiceBox =
-        document.querySelector(
-            '.header-left input[type="text"]'
-        );
-
-    invoiceBox.value =
-        "INV-" +
-        Math.floor(
-            Math.random() * 100000
-        );
-
-    updateTotals();
+if(
+!confirm(
+"Create a new invoice?"
+)
+){
+return;
 }
-window.onload = function(){
 
-    togglePaymentType();
+document
+.querySelectorAll(
+"input"
+)
+.forEach(input=>{
 
-    updateTotals();
+if(
+input.type === "text" ||
+input.type === "number"
+){
+
+input.value = "";
+
+}
+
+});
+
+document
+.querySelectorAll(
+".amount"
+)
+.forEach(el=>{
+
+el.innerText =
+"0.00";
+
+});
+
+document.getElementById(
+"itemBody"
+).innerHTML = `
+
+<tr class="item-row">
+
+<td>
+
+<img class="item-preview">
+
+<input type="file"
+accept="image/*"
+onchange="
+previewItemImage(
+event,
+this
+)">
+
+</td>
+
+<td>
+<input type="text">
+</td>
+
+<td>
+<input class="rate"
+type="number"
+oninput="
+updateTotals()
+">
+</td>
+
+<td>
+<input class="qty"
+value="1"
+type="number"
+oninput="
+updateTotals()
+">
+</td>
+
+<td>
+<span class="amount">
+0.00
+</span>
+</td>
+
+<td>
+
+<button class="btn"
+onclick="
+removeRow(this)
+">
+
+Remove
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+document.getElementById(
+"invoiceNo"
+).value =
+"INV-" +
+Math.floor(
+1000 +
+Math.random()*9000
+);
+
+document.getElementById(
+"companyLogo"
+).src =
+"";
+
+updateTotals();
+
+}
+
+window.onload =
+function(){
+
+togglePaymentType();
+
+updateTotals();
 
 };
+
+      
 
 </script>
 
