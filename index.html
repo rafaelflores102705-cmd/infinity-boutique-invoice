@@ -283,7 +283,16 @@ document.getElementById('remain').innerText=rem.toFixed(2);
 m1.innerText=inst.toFixed(2); m2.innerText=inst.toFixed(2); m3.innerText=inst.toFixed(2);
 }
 function dates(){let d=new Date(); for(let i=1;i<=3;i++){let x=new Date(d); x.setMonth(x.getMonth()+i); document.getElementById('d'+i).innerText=x.toLocaleDateString();}}
-function newInvoice(){itemBody.innerHTML=''; addItem(); invoiceNo.value='INV-'+Math.floor(Math.random()*9000+1000); updateTotals(); dates();}
-addItem(); dates(); updateTotals();
+function newInvoice(){
+    document.getElementById('itemBody').innerHTML = '';
+
+    addItem();
+
+    document.getElementById('invoiceNo').value =
+        'INV-' + Math.floor(Math.random() * 9000 + 1000);
+
+    updateTotals();
+    dates();
+}
 </script>
 </body></html>
