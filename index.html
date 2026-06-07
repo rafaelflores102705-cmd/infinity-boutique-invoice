@@ -216,7 +216,13 @@ h3{
 <body>
 
 <div class="no-print">
-    <button onclick="printInvoice()">🖨 Print Invoice</button>
+    <button onclick="printInvoice()">
+🖨 Print Invoice
+</button>
+
+<button onclick="newInvoice()">
+➕ New Invoice
+</button>
 </div>
 
 <div class="invoice-container">
@@ -273,7 +279,14 @@ h3{
     </div>
 
     <hr>
+    <h2>Currency</h2>
 
+<select id="currency" onchange="updateCurrency()">
+    <option value="¥">Japanese Yen (¥)</option>
+    <option value="₱">Philippine Peso (₱)</option>
+</select>
+
+<hr>
     <h2>Payment Type</h2>
 
     <select id="paymentType"
@@ -356,7 +369,7 @@ h3{
 
     <h2>
         Total Purchase:
-        ¥<span id="total">0.00</span>
+        <span id="currencySymbol">¥</span>
     </h2>
 
     <!-- FULL PAYMENT -->
@@ -374,7 +387,7 @@ h3{
 
         <h3>
             Balance Due:
-            ¥<span id="fullBalanceDue">0.00</span>
+            <span id="currencySymbol">¥</span>
         </h3>
 
     </div>
@@ -386,10 +399,34 @@ h3{
 
         <h2>Layaway Agreement</h2>
 
-        <h3>
-            Required Down Payment (30%):
-            ¥<span id="downPayment">0.00</span>
-        </h3>
+<label>Down Payment Option</label>
+
+<select id="downPaymentType"
+        onchange="updateTotals()">
+
+    <option value="10">10%</option>
+    <option value="20">20%</option>
+    <option value="30" selected>30%</option>
+    <option value="40">40%</option>
+    <option value="50">50%</option>
+    <option value="custom">Custom Amount</option>
+
+</select>
+
+<br><br>
+
+<label>Custom Down Payment</label>
+
+<input type="number"
+       id="customDownPayment"
+       value="0"
+       oninput="updateTotals()">
+
+<h3>
+    Required Down Payment:
+    <span id="currencySymbol">¥</span>
+    <span id="downPayment">0.00</span>
+</h3>
 
         <label>
             Down Payment Received
@@ -402,12 +439,12 @@ h3{
 
         <h3>
             Down Payment Balance Due:
-            ¥<span id="layawayBalanceDue">0.00</span>
+            <span id="currencySymbol">¥</span>
         </h3>
 
         <h3>
             Remaining Balance:
-            ¥<span id="remainingBalance">0.00</span>
+            <span id="currencySymbol">¥</span>
         </h3>
 
         <h2>Installment Schedule</h2>
@@ -460,7 +497,7 @@ h3{
     <h2>Terms & Conditions</h2>
 
     <textarea rows="5">
-30% down payment required for layaway purchases.
+Down payment required for layaway purchases.
 Remaining balance must be paid according to schedule.
 Failure to pay may result in cancellation of the layaway agreement.
 All sales are final.
@@ -473,7 +510,22 @@ All sales are final.
 function printInvoice(){
     window.print();
 }
+let currentCurrency = "¥";
 
+function updateCurrency(){
+
+    currentCurrency =
+        document.getElementById(
+            "currency"
+        ).value;
+
+    document.getElementById(
+        "currencySymbol"
+    ).innerText =
+        currentCurrency;
+
+    updateTotals();
+    }
 function togglePaymentType(){
 
     const paymentType =
@@ -641,63 +693,41 @@ function updateTotals(){
     // LAYAWAY
     // =====================
 
-    const downPayment =
-        total * 0.30;
+    let downPayment = 0;
 
-    const remainingBalance =
-        total - downPayment;
-
+const selectedDownPayment =
     document.getElementById(
-        "downPayment"
-    ).innerText =
-        downPayment.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
+        "downPaymentType"
+    ).value;
 
-    document.getElementById(
-        "remainingBalance"
-    ).innerText =
-        remainingBalance.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
+if(selectedDownPayment === "custom"){
 
-    const layawayReceived =
+    downPayment =
         parseFloat(
             document.getElementById(
-                "layawayPaymentReceived"
+                "customDownPayment"
             ).value
         ) || 0;
 
-    let layawayBalance =
-        downPayment - layawayReceived;
+}
+else{
 
-    if(layawayBalance < 0){
+    downPayment =
+        total *
+        (parseFloat(
+            selectedDownPayment
+        ) / 100);
 
-        layawayBalance = 0;
+}
 
-    }
+if(downPayment > total){
 
-    document.getElementById(
-        "layawayBalanceDue"
-    ).innerText =
-        layawayBalance.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
+    downPayment = total;
 
-    const installmentAmount =
-        remainingBalance / 3;
+}
+
+const remainingBalance =
+    total - downPayment;
 
     document.getElementById("month1").innerText =
         installmentAmount.toLocaleString(
@@ -770,7 +800,85 @@ function generateDueDates(){
     ).innerText =
         date3.toLocaleDateString();
 }
+function newInvoice(){
 
+    if(!confirm(
+        "Create a new invoice?"
+    )){
+        return;
+    }
+
+    document
+        .querySelectorAll("input")
+        .forEach(input => {
+
+            if(
+                input.type !== "button"
+            ){
+                input.value = "";
+            }
+
+        });
+
+    document
+        .querySelectorAll(".amount")
+        .forEach(amount => {
+
+            amount.innerText = "0.00";
+
+        });
+
+    document.getElementById(
+        "itemBody"
+    ).innerHTML = `
+        <tr class="item-row">
+
+            <td>
+                <input type="text">
+            </td>
+
+            <td>
+                <input type="number"
+                       class="rate"
+                       oninput="updateTotals()">
+            </td>
+
+            <td>
+                <input type="number"
+                       class="qty"
+                       value="1"
+                       oninput="updateTotals()">
+            </td>
+
+            <td>
+                <span class="amount">
+                    0.00
+                </span>
+            </td>
+
+            <td>
+                <button type="button"
+                        onclick="removeRow(this)">
+                    Remove
+                </button>
+            </td>
+
+        </tr>
+    `;
+
+    const invoiceBox =
+        document.querySelector(
+            '.header-left input[type="text"]'
+        );
+
+    invoiceBox.value =
+        "INV-" +
+        Math.floor(
+            Math.random() * 100000
+        );
+
+    updateTotals();
+}
 window.onload = function(){
 
     togglePaymentType();
