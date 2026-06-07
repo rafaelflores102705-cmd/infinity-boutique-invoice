@@ -175,7 +175,7 @@ th {
 <label>Invoice No</label>
 <input id="invoiceNo" value="INV-1001">
 <label>Date</label>
-<input type="date" id="invoiceDate">
+<input type="date" id="invoiceDate" onchange="dates()">
 </div>
 </div>
 
@@ -328,5 +328,14 @@ function newInvoice(){
     // Generate installment dates
     dates();
 }
+    // Set today's date
+document.getElementById('invoiceDate').value =
+    new Date().toISOString().split('T')[0];
+
+// Initialize invoice
+addItem();
+dates();
+updateTotals();
+    
 </script>
 </body></html>
