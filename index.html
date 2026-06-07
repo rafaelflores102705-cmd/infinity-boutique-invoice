@@ -6,6 +6,7 @@
 <title>Infinity Boutique Invoice</title>
 
 <style>
+<style>
 
 *{
     margin:0;
@@ -107,6 +108,681 @@ button{
     border:none;
     padding:10px 15px;
     border-radius:4px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#256428;
+}
+
+hr{
+    margin:25px 0;
+}
+
+h2{
+    margin-bottom:15px;
+    color:#2e7d32;
+}
+
+h3{
+    margin-top:15px;
+    margin-bottom:10px;
+}
+
+#fullPaymentSection,
+#layawaySection{
+    background:#fafafa;
+    padding:20px;
+    border:1px solid #ddd;
+    border-radius:5px;
+    margin-top:20px;
+}
+
+.no-print{
+    text-align:right;
+    margin-bottom:15px;
+}
+
+.installment-status{
+    min-width:140px;
+}
+
+.summary-box{
+    border:1px solid #ddd;
+    background:#f9f9f9;
+    padding:15px;
+    margin-top:15px;
+}
+
+.summary-box h3{
+    margin:5px 0;
+}
+
+@media screen and (max-width:768px){
+
+    .header{
+        flex-direction:column;
+    }
+
+    .customer-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media print{
+
+    body{
+        background:white;
+        padding:0;
+    }
+
+    .invoice-container{
+        box-shadow:none;
+        border:none;
+        width:100%;
+        max-width:100%;
+    }
+
+    .no-print,
+    button{
+        display:none !important;
+    }
+
+    input,
+    textarea,
+    select{
+        border:none;
+        background:transparent;
+        padding:0;
+        outline:none;
+    }
+
+    h1{
+        color:black;
+    }
+
+    table th{
+        color:black;
+        background:#eaeaea;
+    }
+
+}
+
+</style>
+</style>
+
+</head>
+<body>
+
+<div class="no-print">
+    <button onclick="printInvoice()">🖨 Print Invoice</button>
+</div>
+
+<div class="invoice-container">
+
+    <div class="header-left">
+            <img src="https://drive.google.com/thumbnail?id=1zF5e4k75SMfcJ6Jtl0_ik4lqOJPzUZKH&sz=w1000"
+     alt="Infinity Boutique Logo"
+     class="logo">
+        <div>
+            <h1>Infinity Boutique's JP Online Shop</h1>
+            <p>Nagoya, Aichi, Japan</p>
+            <p>08094932346</p>
+            <p>harukana1369@gmail.com</p>
+        </div>
+
+        <div>
+            <label>Invoice No.</label>
+            <input type="text" value="INV-0001">
+
+            <br><br>
+
+            <label>Date</label>
+            <input type="date">
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Customer Information</h2>
+
+    <div class="customer-grid">
+
+        <div>
+            <label>Customer Name</label>
+            <input type="text">
+        </div>
+
+        <div>
+            <label>Contact Number</label>
+            <input type="text">
+        </div>
+
+        <div>
+            <label>Address</label>
+            <input type="text">
+        </div>
+
+        <div>
+            <label>Overall Payment Status</label>
+            <input type="text"
+                   placeholder="Paid / Pending / Layaway Active">
+        </div>
+
+    </div>
+
+    <hr>
+
+    <h2>Payment Type</h2>
+
+    <select id="paymentType"
+            onchange="togglePaymentType()">
+
+        <option value="full">
+            Full Payment
+        </option>
+
+        <option value="layaway">
+            3-Month Layaway
+        </option>
+
+    </select>
+
+    <hr>
+
+    <h2>Items</h2>
+
+    <table id="itemsTable">
+
+        <thead>
+
+        <tr>
+            <th>Description</th>
+            <th>Rate (¥)</th>
+            <th>Quantity</th>
+            <th>Amount (¥)</th>
+            <th>Action</th>
+        </tr>
+
+        </thead>
+
+        <tbody id="itemBody">
+
+        <tr class="item-row">
+
+            <td>
+                <input type="text">
+            </td>
+
+            <td>
+                <input type="number"
+                       class="rate"
+                       oninput="updateTotals()">
+            </td>
+
+            <td>
+                <input type="number"
+                       class="qty"
+                       value="1"
+                       oninput="updateTotals()">
+            </td>
+
+            <td>
+                ¥<span class="amount">0</span>
+            </td>
+
+            <td>
+                <button type="button"
+                        onclick="removeRow(this)">
+                    Remove
+                </button>
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+    <br>
+
+    <button type="button"
+            onclick="addItemRow()">
+        + Add Item
+    </button>
+
+    <hr>
+
+    <h2>
+        Total Purchase:
+        ¥<span id="total">0.00</span>
+    </h2>
+
+    <!-- FULL PAYMENT -->
+
+    <div id="fullPaymentSection">
+
+        <h2>Full Payment</h2>
+
+        <label>Payment Received</label>
+
+        <input type="number"
+               id="fullPaymentReceived"
+               value="0"
+               oninput="updateTotals()">
+
+        <h3>
+            Balance Due:
+            ¥<span id="fullBalanceDue">0.00</span>
+        </h3>
+
+    </div>
+
+    <!-- LAYAWAY -->
+
+    <div id="layawaySection"
+         style="display:none;">
+
+        <h2>Layaway Agreement</h2>
+
+        <h3>
+            Required Down Payment (30%):
+            ¥<span id="downPayment">0.00</span>
+        </h3>
+
+        <label>
+            Down Payment Received
+        </label>
+
+        <input type="number"
+               id="layawayPaymentReceived"
+               value="0"
+               oninput="updateTotals()">
+
+        <h3>
+            Down Payment Balance Due:
+            ¥<span id="layawayBalanceDue">0.00</span>
+        </h3>
+
+        <h3>
+            Remaining Balance:
+            ¥<span id="remainingBalance">0.00</span>
+        </h3>
+
+        <h2>Installment Schedule</h2>
+
+        <table>
+
+            <tr>
+                <th>Payment #</th>
+                <th>Due Date</th>
+                <th>Amount Due</th>
+                <th>Status</th>
+            </tr>
+
+            <tr>
+                <td>1</td>
+                <td id="due1"></td>
+                <td>¥<span id="month1">0.00</span></td>
+                <td>
+                    <input type="text"
+                           placeholder="Pending / Paid">
+                </td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td id="due2"></td>
+                <td>¥<span id="month2">0.00</span></td>
+                <td>
+                    <input type="text"
+                           placeholder="Pending / Paid">
+                </td>
+            </tr>
+
+            <tr>
+                <td>3</td>
+                <td id="due3"></td>
+                <td>¥<span id="month3">0.00</span></td>
+                <td>
+                    <input type="text"
+                           placeholder="Pending / Paid">
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+
+    <hr>
+
+    <h2>Terms & Conditions</h2>
+
+    <textarea rows="5">
+30% down payment required for layaway purchases.
+Remaining balance must be paid according to schedule.
+Failure to pay may result in cancellation of the layaway agreement.
+All sales are final.
+    </textarea>
+
+</div>
+
+<script>
+
+function printInvoice(){
+    window.print();
+}
+
+function togglePaymentType(){
+
+    const paymentType =
+        document.getElementById("paymentType").value;
+
+    const fullSection =
+        document.getElementById("fullPaymentSection");
+
+    const layawaySection =
+        document.getElementById("layawaySection");
+
+    if(paymentType === "full"){
+
+        fullSection.style.display = "block";
+        layawaySection.style.display = "none";
+
+    }
+    else{
+
+        fullSection.style.display = "none";
+        layawaySection.style.display = "block";
+
+    }
+
+    updateTotals();
+}
+
+function addItemRow(){
+
+    const tbody =
+        document.getElementById("itemBody");
+
+    const row =
+        document.createElement("tr");
+
+    row.className = "item-row";
+
+    row.innerHTML = `
+        <td>
+            <input type="text">
+        </td>
+
+        <td>
+            <input type="number"
+                   class="rate"
+                   oninput="updateTotals()">
+        </td>
+
+        <td>
+            <input type="number"
+                   class="qty"
+                   value="1"
+                   oninput="updateTotals()">
+        </td>
+
+        <td>
+            ¥<span class="amount">0</span>
+        </td>
+
+        <td>
+            <button type="button"
+                    onclick="removeRow(this)">
+                Remove
+            </button>
+        </td>
+    `;
+
+    tbody.appendChild(row);
+}
+
+function removeRow(button){
+
+    const rows =
+        document.querySelectorAll(".item-row");
+
+    if(rows.length <= 1){
+
+        alert(
+            "At least one item row must remain."
+        );
+
+        return;
+    }
+
+    button.closest("tr").remove();
+
+    updateTotals();
+}
+
+function updateTotals(){
+
+    let total = 0;
+
+    document
+        .querySelectorAll(".item-row")
+        .forEach(row => {
+
+            const rate =
+                parseFloat(
+                    row.querySelector(".rate").value
+                ) || 0;
+
+            const qty =
+                parseFloat(
+                    row.querySelector(".qty").value
+                ) || 0;
+
+            const amount =
+                rate * qty;
+
+            row.querySelector(".amount").innerText =
+                amount.toLocaleString(
+                    undefined,
+                    {
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    }
+                );
+
+            total += amount;
+
+        });
+
+    document.getElementById("total").innerText =
+        total.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+    // =====================
+    // FULL PAYMENT
+    // =====================
+
+    const fullPaymentReceived =
+        parseFloat(
+            document.getElementById(
+                "fullPaymentReceived"
+            ).value
+        ) || 0;
+
+    let fullBalanceDue =
+        total - fullPaymentReceived;
+
+    if(fullBalanceDue < 0){
+
+        fullBalanceDue = 0;
+
+    }
+
+    document.getElementById(
+        "fullBalanceDue"
+    ).innerText =
+        fullBalanceDue.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+    // =====================
+    // LAYAWAY
+    // =====================
+
+    const downPayment =
+        total * 0.30;
+
+    const remainingBalance =
+        total - downPayment;
+
+    document.getElementById(
+        "downPayment"
+    ).innerText =
+        downPayment.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+    document.getElementById(
+        "remainingBalance"
+    ).innerText =
+        remainingBalance.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+    const layawayReceived =
+        parseFloat(
+            document.getElementById(
+                "layawayPaymentReceived"
+            ).value
+        ) || 0;
+
+    let layawayBalance =
+        downPayment - layawayReceived;
+
+    if(layawayBalance < 0){
+
+        layawayBalance = 0;
+
+    }
+
+    document.getElementById(
+        "layawayBalanceDue"
+    ).innerText =
+        layawayBalance.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+    const installmentAmount =
+        remainingBalance / 3;
+
+    document.getElementById("month1").innerText =
+        installmentAmount.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+    document.getElementById("month2").innerText =
+        installmentAmount.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+    document.getElementById("month3").innerText =
+        installmentAmount.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+    generateDueDates();
+}
+
+function generateDueDates(){
+
+    const today =
+        new Date();
+
+    const date1 =
+        new Date(today);
+
+    const date2 =
+        new Date(today);
+
+    const date3 =
+        new Date(today);
+
+    date1.setMonth(
+        date1.getMonth() + 1
+    );
+
+    date2.setMonth(
+        date2.getMonth() + 2
+    );
+
+    date3.setMonth(
+        date3.getMonth() + 3
+    );
+
+    document.getElementById(
+        "due1"
+    ).innerText =
+        date1.toLocaleDateString();
+
+    document.getElementById(
+        "due2"
+    ).innerText =
+        date2.toLocaleDateString();
+
+    document.getElementById(
+        "due3"
+    ).innerText =
+        date3.toLocaleDateString();
+}
+
+window.onload = function(){
+
+    togglePaymentType();
+
+    updateTotals();
+
+};
+
+</script>
+
+</body>
+    </html>    border-radius:4px;
     cursor:pointer;
 }
 
