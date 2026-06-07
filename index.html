@@ -292,14 +292,10 @@ background:none;
 
 <div>
 
-<img id="companyLogo"
+<img
 class="logo"
-src=""
-alt="Logo">
-
-<input type="file"
-accept="image/*"
-onchange="loadCompanyLogo(event)">
+src="https://drive.google.com/thumbnail?id=1zF5e4k75SMfcJ6Jtl0_ik4lqOJPzUZKH&sz=w1000"
+alt="Infinity Boutique Logo">
 
 </div>
 
@@ -595,10 +591,88 @@ Installments
 <tr>
 
 <th>#</th>
+<th>Due Date</th>
 <th>Amount</th>
 <th>Status</th>
 
 </tr>
+
+<tr>
+
+<td>1</td>
+
+<td id="due1"></td>
+
+<td>
+
+<span id="currencySymbol5">¥</span>
+
+<span id="month1">
+0.00
+</span>
+
+</td>
+
+<td>
+
+<input class="status-input"
+placeholder="Pending / Paid">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td id="due2"></td>
+
+<td>
+
+<span id="currencySymbol6">¥</span>
+
+<span id="month2">
+0.00
+</span>
+
+</td>
+
+<td>
+
+<input class="status-input"
+placeholder="Pending / Paid">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td id="due3"></td>
+
+<td>
+
+<span id="currencySymbol7">¥</span>
+
+<span id="month3">
+0.00
+</span>
+
+</td>
+
+<td>
+
+<input class="status-input"
+placeholder="Pending / Paid">
+
+</td>
+
+</tr>
+
+</table>
 
 <tr>
 
@@ -709,27 +783,9 @@ type === "layaway"
 updateTotals();
 }
 
-function loadCompanyLogo(event){
 
-const file =
-event.target.files[0];
 
-if(!file) return;
 
-const reader =
-new FileReader();
-
-reader.onload =
-function(e){
-
-document.getElementById(
-"companyLogo"
-).src =
-e.target.result;
-
-};
-
-reader.readAsDataURL(file);
 
 }
 
@@ -1190,15 +1246,41 @@ Math.floor(
 Math.random()*9000
 );
 
-document.getElementById(
-"companyLogo"
-).src =
-"";
+
 
 updateTotals();
 
-}
+generateInstallmentDates();
 
+}
+function generateInstallmentDates(){
+
+const today = new Date();
+
+const month1 = new Date(today);
+const month2 = new Date(today);
+const month3 = new Date(today);
+
+month1.setMonth(month1.getMonth() + 1);
+month2.setMonth(month2.getMonth() + 2);
+month3.setMonth(month3.getMonth() + 3);
+
+document.getElementById(
+"due1"
+).innerText =
+month1.toLocaleDateString();
+
+document.getElementById(
+"due2"
+).innerText =
+month2.toLocaleDateString();
+
+document.getElementById(
+"due3"
+).innerText =
+month3.toLocaleDateString();
+
+    }
 window.onload =
 function(){
 
@@ -1206,6 +1288,7 @@ togglePaymentType();
 
 updateTotals();
 
+generateInstallmentDates();
 };
 
       
