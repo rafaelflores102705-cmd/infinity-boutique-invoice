@@ -119,6 +119,36 @@ th {
         padding:0;
     }
 }
+    /* Terms & Conditions */
+.terms-section {
+    margin-top: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    background: #fff;
+}
+
+.terms-section h3 {
+    margin: 0 0 15px;
+    color: #2e7d32;
+    border-bottom: 2px solid #2e7d32;
+    padding-bottom: 8px;
+}
+
+.terms-box {
+    min-height: 180px;
+    border: 2px dashed #cfcfcf;
+    border-radius: 8px;
+    padding: 15px;
+    color: #999;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+}
+
+.terms-box::before {
+    content: "Enter Terms & Conditions Here";
+} 
 
 }
 </style>
@@ -203,6 +233,12 @@ th {
 <tr><td>3</td><td id="d3"></td><td><span id="cur7">¥</span><span id="m3">0.00</span></td><td><input></td></tr>
 </table>
 </div>
+    <div class="terms-section">
+    <h3>Terms & Conditions</h3>
+
+    <div class="terms-box">
+        <!-- Enter your Terms & Conditions here -->
+    </div>
 </div>
 
 <script>
